@@ -34,3 +34,8 @@ generate_density_raster(
 )
 ## Note
 Inside Livestock_census_GJ_RJ.csv file have demo values only.
+## Online Shiny App
+
+Access the online GeoDensityR Shiny application:
+
+https://sahalpaladan.shinyapps.io/geodensityr_shiny/
