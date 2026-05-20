@@ -25,6 +25,7 @@ devtools::install_github("sahalpaladan/GeoDensityR")
 library(GeoDensityR)
 
 generate_density_raster(
+
     csv_file = "Livestock_census_GJ_RJ.csv",
     
     shp_file = "GJ_RJ_District_Shape_File.shp",
