@@ -25,13 +25,21 @@ devtools::install_github("sahalpaladan/GeoDensityR")
 library(GeoDensityR)
 
 generate_density_raster(
+
     csv_file = "Livestock_census_GJ_RJ.csv",
+    
     shp_file = "GJ_RJ_District_Shape_File.shp",
+    
     join_shp = "District",
+    
     join_csv = "District",
+    
     value_col = "Cattle",
+    
     resolution = 0.1,
+    
     output = "density.asc"
+    
 )
 ## Note
 Inside Livestock_census_GJ_RJ.csv file have demo values only.
