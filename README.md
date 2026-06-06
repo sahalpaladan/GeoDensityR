@@ -19,6 +19,7 @@ Useful for:
 ## Installation
 
 ```r
+install.packages("GeoDensityR")
 devtools::install_github("sahalpaladan/GeoDensityR")
 ```
 ## Usage
