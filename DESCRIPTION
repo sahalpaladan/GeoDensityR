@@ -1,15 +1,33 @@
 Package: GeoDensityR
 Type: Package
 Title: Generate Density Rasters from Polygon and Census Data
-Version: 0.1.0
-Author: Sahal Paladan
-Maintainer: Sahal Paladan <sahalpaladan@gmail.com>
-Description: Create density rasters from polygon shapefiles and census/tabular data.
-License: MIT
+Version: 0.1.2
+Authors@R: 
+    person(
+        "Sahal",
+        "Paladan",
+        email = "sahalpaladan@gmail.com",
+        role = c("aut", "cre")
+    )
+Description: Creates density rasters from polygon vector data and
+    tabular census or survey data. The package joins polygon
+    boundaries with attribute data, calculates densities,
+    rasterizes outputs, and exports ASCII Grid or GeoTiff rasters.
+    Methods are based on spatial rasterization workflows implemented
+    in the 'terra' package Hijmans (2025)
+    <https://rspatial.github.io/terra/>.
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
+Depends:
+    R (>= 4.1.0)
 Imports:
-    terra,
-    dplyr
+    terra
+Suggests:
+    testthat,
+    knitr,
+    rmarkdown
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 8.0.0
+URL: https://github.com/sahalpaladan/GeoDensityR
+BugReports: https://github.com/sahalpaladan/GeoDensityR/issues
+Config/roxygen2/version: 8.0.0

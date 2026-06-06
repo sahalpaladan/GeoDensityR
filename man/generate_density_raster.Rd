@@ -2,7 +2,7 @@
 % Please edit documentation in R/generate_density_raster.R
 \name{generate_density_raster}
 \alias{generate_density_raster}
-\title{Generate Density Raster from Polygon and Census Data}
+\title{Generate Density Raster from Polygon and Tabular Data}
 \usage{
 generate_density_raster(
   csv_file,
@@ -14,6 +14,40 @@ generate_density_raster(
   output = "density.asc"
 )
 }
+\arguments{
+\item{csv_file}{Path to CSV file.}
+
+\item{shp_file}{Path to polygon shapefile (.shp).}
+
+\item{join_shp}{Join column in shapefile.}
+
+\item{join_csv}{Join column in CSV.}
+
+\item{value_col}{Numeric column used for density calculation.}
+
+\item{resolution}{Output raster resolution.}
+
+\item{output}{Output raster filename (.asc or .tif).}
+}
+\value{
+A terra SpatRaster object.
+}
 \description{
-Generate Density Raster from Polygon and Census Data
+Creates a density raster by joining polygon attributes with
+tabular data and calculating density as:
+value / polygon area.
+}
+\examples{
+if (file.exists("population.csv") &&
+    file.exists("districts.shp")) {
+  generate_density_raster(
+    csv_file = "population.csv",
+    shp_file = "districts.shp",
+    join_shp = "District",
+    join_csv = "District",
+    value_col = "Population",
+    resolution = 0.1,
+    output = "density.asc"
+  )
+}
 }
