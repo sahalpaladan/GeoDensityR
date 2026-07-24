@@ -5,49 +5,48 @@
 \title{Generate Density Raster from Polygon and Tabular Data}
 \usage{
 generate_density_raster(
-  csv_file,
-  shp_file,
-  join_shp,
-  join_csv,
+  spatial_target,
+  attribute_table,
+  join_spatial,
+  join_attribute,
   value_col,
   resolution = 0.1,
-  output = "density.asc"
+  output = NULL
 )
 }
 \arguments{
-\item{csv_file}{Path to CSV file.}
+\item{spatial_target}{A \code{terra::SpatVector}, \code{sf::sf} object, or a path string to a shapefile.}
 
-\item{shp_file}{Path to polygon shapefile (.shp).}
+\item{attribute_table}{A \code{data.frame}, \code{tibble}, or path string to a CSV file.}
 
-\item{join_shp}{Join column in shapefile.}
+\item{join_spatial}{Character. The indexing key column found within the spatial vector object.}
 
-\item{join_csv}{Join column in CSV.}
+\item{join_attribute}{Character. The indexing key column found within the attribute table.}
 
-\item{value_col}{Numeric column used for density calculation.}
+\item{value_col}{Character. Numeric column containing values to evaluate for density calculation.}
 
-\item{resolution}{Output raster resolution.}
+\item{resolution}{Numeric. The cell size resolution for the generated target output raster template.}
 
-\item{output}{Output raster filename (.asc or .tif).}
+\item{output}{Optional character. A target filepath string (.tif or .asc) to write the raster to disk.}
 }
 \value{
-A terra SpatRaster object.
+A \code{terra::SpatRaster} object representing computed density surfaces.
 }
 \description{
-Creates a density raster by joining polygon attributes with
-tabular data and calculating density as:
-value / polygon area.
+Creates a continuous density raster surface by joining vector spatial
+layers with tabular data frameworks, normalizing values by ellipsoidal
+polygon area calculations.
 }
 \examples{
-if (file.exists("population.csv") &&
-    file.exists("districts.shp")) {
-  generate_density_raster(
-    csv_file = "population.csv",
-    shp_file = "districts.shp",
-    join_shp = "District",
-    join_csv = "District",
-    value_col = "Population",
-    resolution = 0.1,
-    output = "density.asc"
-  )
+\dontrun{
+# Example using in-memory data frames and vectors
+result <- generate_density_raster(
+  spatial_target = standard_polygon_object,
+  attribute_table = census_dataframe,
+  join_spatial = "District_ID",
+  join_attribute = "ID",
+  value_col = "Population",
+  resolution = 0.05
+)
 }
 }
