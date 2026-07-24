@@ -18,8 +18,16 @@ Useful for:
 
 ## Installation
 
+### From CRAN
+
 ```r
-devtools::install_github("sahalpaladan/GeoDensityR")
+install.packages("GeoDensityR")
+```
+
+### Development Version
+
+```r
+remotes::install_github("sahalpaladan/GeoDensityR")
 ```
 ## Usage
 ```r
