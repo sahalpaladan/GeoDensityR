@@ -1,0 +1,89 @@
+---
+title: "Getting started with GeoDensityR"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Getting started with GeoDensityR}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>", fig.width = 6, fig.height = 4)
+```
+
+## The problem
+
+Counts such as population or livestock are usually reported per administrative unit, while environmental covariates come as regular raster grids. `generate_density_raster()` joins a table of counts to a polygon layer, divides each count by the polygon's ellipsoidal area, and writes the resulting density onto a raster of the resolution you choose.
+
+## A small example
+
+We build four districts as polygons and a table of populations. The key column is called `district_id` in the layer and `ID` in the table; keys are matched without regard to case or surrounding spaces.
+
+```{r data}
+library(GeoDensityR)
+library(terra)
+
+districts <- terra::vect(
+  c("POLYGON((0 0, 2 0, 2 2, 0 2, 0 0))",
+    "POLYGON((2 0, 4 0, 4 2, 2 2, 2 0))",
+    "POLYGON((0 2, 4 2, 4 3, 0 3, 0 2))",
+    "POLYGON((0 3, 4 3, 4 4, 0 4, 0 3))"),
+  crs = "EPSG:4326"
+)
+districts$district_id <- c("D1", "D2", "D3", "D4")
+
+census <- data.frame(
+  ID         = c("D1", "D2", "D3", "D4"),
+  population = c(120000, 45000, 300000, 80000)
+)
+```
+
+```{r run}
+dens <- generate_density_raster(
+  spatial_target  = districts,
+  attribute_table = census,
+  join_spatial    = "district_id",
+  join_attribute  = "ID",
+  value_col       = "population",
+  resolution      = 0.1
+)
+dens
+```
+
+```{r plot}
+terra::plot(dens, main = "People per square kilometre")
+terra::lines(districts)
+```
+
+## Checking that totals are preserved
+
+Each cell takes the density of the polygon containing its centre, so the sum of density times cell area should be close to, but not exactly, the original total.
+
+```{r check}
+raster_total <- terra::global(dens * terra::cellSize(dens, unit = "km"), "sum", na.rm = TRUE)[[1]]
+c(census_total = sum(census$population), raster_total = round(raster_total))
+```
+
+## Using real data
+
+Two things matter in practice.
+
+1. **Coordinate system.** `resolution` is in the units of the layer's coordinate reference system. For a resolution in degrees, reproject first, for example `v <- terra::project(terra::vect("boundaries.shp"), "EPSG:4326")`. Areas are always computed on the ellipsoid.
+2. **Numbers stored as text.** A CSV with values such as `"36,438"` is read as text. Remove the separators before the call, for example `tab$Cattle <- as.numeric(gsub(",", "", tab$Cattle))`.
+
+The function warns about polygons with no matching table row, table rows with no polygon, values that cannot be converted to numbers, and layers that are not in longitude/latitude. If several polygons share a key (for example a state made of separate islands), the value is divided by their combined area, so the count is not used more than once.
+
+```{r real, eval = FALSE}
+v   <- terra::project(terra::vect("India_State_Boundary.shp"), "EPSG:4326")
+tab <- read.csv("livestock_counts.csv")
+tab$Cattle <- as.numeric(gsub(",", "", tab$Cattle))
+
+cattle <- generate_density_raster(
+  v, tab,
+  join_spatial   = "State_Name",
+  join_attribute = "State",
+  value_col      = "Cattle",
+  resolution     = 0.05,
+  output         = "cattle_density.tif"
+)
+```

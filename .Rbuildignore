@@ -2,3 +2,9 @@
 ^\.Rproj\.user$
 ^LICENSE\.md$
 ^\.Rhistory$
+^CONTRIBUTING\.md$
+^cran-comments\.md$
+^\.github$
+^paper$
+^doc$
+^Meta$
