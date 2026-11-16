@@ -1,14 +1,13 @@
 Package: GeoDensityR
 Type: Package
 Title: Generate Density Rasters from Polygon and Census Data
-Version: 0.2.0
+Version: 0.2.1
 Authors@R: 
-    person(
-        "Sahal",
-        "Paladan",
-        email = "sahalpaladan@gmail.com",
-        role = c("aut", "cre")
-    )
+    c(person("Sahal", "Paladan",
+             email = "sahalpaladan@gmail.com",
+             role = c("aut", "cre")),
+      person("Mohammed Mudassar", "Chanda",
+             role = "aut"))
 Description: Creates continuous density raster surfaces by joining vector spatial 
     layers with tabular data frameworks, normalizing values by ellipsoidal 
     polygon area calculations. Reconciles discrete boundary-constrained census or 
@@ -17,17 +16,13 @@ Description: Creates continuous density raster surfaces by joining vector spatia
     in the 'terra' package Hijmans (2025) <https://rspatial.github.io/terra/>.
 License: MIT + file LICENSE
 Encoding: UTF-8
-LazyData: true
 Depends:
     R (>= 4.1.0)
-Imports:
-    terra,
-    tools
-Suggests:
-    testthat,
-    knitr,
-    rmarkdown
+Imports: terra, tools, stats, utils
+Suggests: testthat (>= 3.0.0), knitr, rmarkdown
+VignetteBuilder: knitr
 Roxygen: list(markdown = TRUE)
 URL: https://github.com/sahalpaladan/GeoDensityR
 BugReports: https://github.com/sahalpaladan/GeoDensityR/issues
-Config/roxygen2/version: 8.0.0
+Config/roxygen2/version: 8.1.0
+Config/testthat/edition: 3

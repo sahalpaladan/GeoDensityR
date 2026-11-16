@@ -25,7 +25,7 @@ generate_density_raster(
 
 \item{value_col}{Character. Numeric column containing values to evaluate for density calculation.}
 
-\item{resolution}{Numeric. The cell size resolution for the generated target output raster template.}
+\item{resolution}{Numeric. The cell size of the output raster, in the units of the layer's coordinate reference system.}
 
 \item{output}{Optional character. A target filepath string (.tif or .asc) to write the raster to disk.}
 }
@@ -37,9 +37,24 @@ Creates a continuous density raster surface by joining vector spatial
 layers with tabular data frameworks, normalizing values by ellipsoidal
 polygon area calculations.
 }
+\details{
+Keys are matched without regard to case or surrounding whitespace. If
+several polygons share a key (for example a state made of separate islands),
+the value is divided by their combined area, so each of those polygons gets
+the same density and the total is not counted more than once. Polygons with
+no matching table row receive \code{NA} and a warning is issued. Duplicated
+keys in the attribute table are an error.
+
+Areas are computed on the ellipsoid with \code{terra::expanse()}, whatever
+the coordinate reference system of the layer. The cell size
+\code{resolution} is, however, in the units of the layer's coordinate
+reference system (degrees for longitude/latitude, usually metres otherwise),
+and a warning is given if the layer is not in longitude/latitude. Each cell
+takes the density of the polygon containing its centre, so the sum of
+cell density times cell area can differ slightly from the original total.
+}
 \examples{
 \dontrun{
-# Example using in-memory data frames and vectors
 result <- generate_density_raster(
   spatial_target = standard_polygon_object,
   attribute_table = census_dataframe,

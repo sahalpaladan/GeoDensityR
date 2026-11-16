@@ -1,18 +1,14 @@
 # GeoDensityR <img src="man/figures/logo.png" align="right" height="139" alt="" />
 
 <!-- badges: start -->
-[![CRAN status](https://r-pkg.org)](https://r-project.org)
-[![CRAN RStudio mirror downloads](https://r-pkg.org)](https://r-project.org)
-[![License: MIT](https://shields.io)](https://opensource.org)
+[![CRAN status](https://www.r-pkg.org/badges/version/GeoDensityR)](https://CRAN.R-project.org/package=GeoDensityR)
 <!-- badges: end -->
 
-**GeoDensityR** provides an optimized, open-source programmatic framework for the R environment to automate the integration, normalization, and surface rasterization of tabular attributes over complex vector geometries.
-
-The package reconciles discrete, boundary-constrained census or survey counts with uniform grids, calculating globally precise density allocations directly on ellipsoidal surfaces without relying on distortive local projection coordinates.
+Census and survey counts are usually published per administrative unit (districts, states, tracts), while environmental data come as regular raster grids. **GeoDensityR** joins a table of counts to a polygon layer, divides each count by the polygon's area on the ellipsoid, and writes the resulting density onto a raster of the resolution you choose. The result is a `terra` `SpatRaster` that can be stacked with climate or land-cover layers.
 
 ---
 
-## 🚀 Key Features
+From CRAN:
 
 * **Flexible Multi-Routing Inputs:** Natively processes both in-memory R spatial objects (`terra::SpatVector`, `sf::sf`), relational data frames, or physical disk file paths (`.shp`, `.csv`).
 * **Geodesic Spatial Precision:** Employs ellipsoidal surface calculation models (`terra::expanse()`) to evaluate precise spatial polygon areas everywhere on Earth without projection distortion.
@@ -29,70 +25,66 @@ You can install the stable release version of **GeoDensityR** directly from CRAN
 install.packages("GeoDensityR")
 ```
 
-Alternatively, you can install the development version from GitHub using `remotes`:
+Development version from GitHub:
 
-```R
+```r
 # install.packages("remotes")
 remotes::install_github("sahalpaladan/GeoDensityR")
 ```
 
----
+## Example
 
-## 📖 Quick Start Usage Walkthrough
+```r
+library(GeoDensityR)
+library(terra)
 
-This reproducible example demonstrates how to process demographic data using in-memory spatial layers:
-
-```R
-library("GeoDensityR")
-library("terra")
-
-# 1. Create a dummy spatial layer with 2 zones (WGS84)
-wkt_polys <- c(
-  "POLYGON ((77.5 12.5, 77.6 12.5, 77.6 12.6, 77.5 12.6, 77.5 12.5))",
-  "POLYGON ((77.6 12.5, 77.7 12.5, 77.7 12.6, 77.6 12.6, 77.6 12.5))"
+# Four districts as polygons, and a table of populations
+districts <- terra::vect(
+  c("POLYGON((0 0, 2 0, 2 2, 0 2, 0 0))",
+    "POLYGON((2 0, 4 0, 4 2, 2 2, 2 0))",
+    "POLYGON((0 2, 4 2, 4 3, 0 3, 0 2))",
+    "POLYGON((0 3, 4 3, 4 4, 0 4, 0 3))"),
+  crs = "EPSG:4326"
 )
-spatial_zones <- terra::vect(wkt_polys, crs = "EPSG:4326")
-spatial_zones$Zone_Code <- c("Region_A", "Region_B")
+districts$district_id <- c("D1", "D2", "D3", "D4")
 
-# 2. Build a matching census table data frame
-census_table <- data.frame(
-  ID = c("Region_A", "Region_B"),
-  Population = c(55000, 112000),
-  stringsAsFactors = FALSE
+census <- data.frame(
+  ID         = c("D1", "D2", "D3", "D4"),
+  population = c(120000, 45000, 300000, 80000)
 )
 
-# 3. Generate the continuous density surface matrix
-density_surface <- generate_density_raster(
-  spatial_target   = spatial_zones,     # Memory SpatVector
-  attribute_table  = census_table,      # Memory data.frame
-  join_spatial     = "Zone_Code",
-  join_attribute   = "ID",
-  value_col        = "Population",
-  resolution       = 0.005,             # Pixel grid spacing config
-  output           = "population_density.tif" # Optional auto-write to disk
+dens <- generate_density_raster(
+  spatial_target  = districts,
+  attribute_table = census,
+  join_spatial    = "district_id",
+  join_attribute  = "ID",
+  value_col       = "population",
+  resolution      = 0.1
 )
 
-# 4. Visualize the generated surface output
-plot(density_surface, main = "Ellipsoidal Density Surface (People / km²)")
-plot(spatial_zones, add = TRUE, border = "white", lwd = 1.5)
+terra::plot(dens, main = "People per square kilometre")
 ```
 
----
+`spatial_target` can be a `terra::SpatVector`, an `sf` object or a path to a shapefile, and `attribute_table` can be a data frame or a path to a CSV file. Use `output = "density.tif"` to write the result to disk.
 
-## 📜 Academic Citation
+## Things to know
 
-If you use `GeoDensityR` in your research or academic publications, please cite the software package as follows:
+* **Resolution units.** `resolution` is in the units of the layer's coordinate reference system. For degrees, reproject first: `v <- terra::project(terra::vect("boundaries.shp"), "EPSG:4326")`. Areas are always computed on the ellipsoid.
+* **Numbers stored as text.** A CSV with values such as `"36,438"` is read as text. Remove the separators first: `tab$count <- as.numeric(gsub(",", "", tab$count))`.
+* **Keys.** Keys are matched without regard to case or surrounding spaces. Polygons that share a key (for example a state made of separate islands) share the value in proportion to their area. Polygons with no matching row receive `NA` and a warning.
+* **Totals.** Each cell takes the density of the polygon containing its centre, so density times cell area summed over the raster can differ slightly from the original total. In a test with a national livestock census at 0.05 degrees, the difference was about 0.03% to 0.06%.
+* **Uniform density within polygons.** The method does not redistribute counts within a unit. For that, use areal-interpolation or dasymetric methods.
 
-```text
-Paladan S (2026). GeoDensityR: An Algorithmic Framework for Generating Continuous 
-Density Rasters from Disparate Polygon and Tabular Data Assemblies. 
-R package version 0.2.0, URL: https://r-project.org.
-```
+See `vignette("GeoDensityR")` for a longer walk-through.
 
----
+## Citation
 
-## 🤝 Contributing & Bug Reports
+Paladan S, Chanda MM (2026). *GeoDensityR: Generate Density Rasters from Polygon and Census Data*. R package version 0.2.1. <https://doi.org/10.32614/CRAN.package.GeoDensityR>
 
-Contributions, feature requests, and code enhancements are welcome! If you encounter any unexpected performance issues, edge-case structural bugs, or parsing validation errors, please file an issue with a reproducible workflow example on the [GitHub Issues Tracker](https://github.com).
+## Contributing
 
-**License:** Developed under the open-source [MIT License](LICENSE).
+Bug reports and pull requests are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## License
+
+MIT
