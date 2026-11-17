@@ -1,4 +1,4 @@
-# GeoDensityR <img src="man/figures/logo.png" align="right" height="139" alt="" />
+# GeoDensityR
 
 <!-- badges: start -->
 [![CRAN status](https://www.r-pkg.org/badges/version/GeoDensityR)](https://CRAN.R-project.org/package=GeoDensityR)
@@ -6,22 +6,11 @@
 
 Census and survey counts are usually published per administrative unit (districts, states, tracts), while environmental data come as regular raster grids. **GeoDensityR** joins a table of counts to a polygon layer, divides each count by the polygon's area on the ellipsoid, and writes the resulting density onto a raster of the resolution you choose. The result is a `terra` `SpatRaster` that can be stacked with climate or land-cover layers.
 
----
+## Installation
 
 From CRAN:
 
-* **Flexible Multi-Routing Inputs:** Natively processes both in-memory R spatial objects (`terra::SpatVector`, `sf::sf`), relational data frames, or physical disk file paths (`.shp`, `.csv`).
-* **Geodesic Spatial Precision:** Employs ellipsoidal surface calculation models (`terra::expanse()`) to evaluate precise spatial polygon areas everywhere on Earth without projection distortion.
-* **Unified Pipeline:** Automates string-cleaning lookups, tabular joins, variable area density normalizations, and high-performance C++ rasterization in a single function call.
-* **Standardized GIS Exports:** Decoupled file I/O allows direct saving to standard `.tif` (GeoTIFF) or `.asc` (Esri ASCII Grid) matrix structures.
-
----
-
-## 🛠️ Installation
-
-You can install the stable release version of **GeoDensityR** directly from CRAN:
-
-```R
+```r
 install.packages("GeoDensityR")
 ```
 
@@ -79,11 +68,11 @@ See `vignette("GeoDensityR")` for a longer walk-through.
 
 ## Citation
 
-Paladan S, Chanda MM (2026). *GeoDensityR: Generate Density Rasters from Polygon and Census Data*. R package version 0.2.1. <https://doi.org/10.32614/CRAN.package.GeoDensityR>
+Paladan S, Chanda MM (2026). *GeoDensityR: Generate Density Rasters from Polygon and Census Data*. R package version 0.2.2. <https://doi.org/10.32614/CRAN.package.GeoDensityR>
 
 ## Contributing
 
-Bug reports and pull requests are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md).
+Bug reports and pull requests are welcome. See [CONTRIBUTING.md](https://github.com/sahalpaladan/GeoDensityR/blob/main/CONTRIBUTING.md).
 
 ## License
 

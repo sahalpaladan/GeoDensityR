@@ -1,4 +1,4 @@
-# GeoDensityR 0.2.1
+# GeoDensityR 0.2.2
 
 * Polygons sharing a key now share the value in proportion to their area; previously each received the full value.
 * Warnings for polygons with no table row, table rows with no polygon, non-numeric values, and layers not in longitude/latitude.
