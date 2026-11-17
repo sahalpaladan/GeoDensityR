@@ -1,4 +1,5 @@
 # GeoDensityR
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.24304734.svg)](https://doi.org/10.5281/zenodo.24304734)
 
 <!-- badges: start -->
 [![CRAN status](https://www.r-pkg.org/badges/version/GeoDensityR)](https://CRAN.R-project.org/package=GeoDensityR)

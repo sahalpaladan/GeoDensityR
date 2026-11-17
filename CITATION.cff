@@ -2,6 +2,7 @@ cff-version: 1.2.0
 message: "If you use this software, please cite it as below."
 title: "GeoDensityR: Generate Density Rasters from Polygon and Census Data"
 version: 0.2.2
+doi: 10.5281/zenodo.24304734
 date-released: 2026-11-17
 license: MIT
 repository-code: "https://github.com/sahalpaladan/GeoDensityR"
