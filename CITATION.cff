@@ -1,0 +1,24 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+title: "GeoDensityR: Generate Density Rasters from Polygon and Census Data"
+version: 0.2.2
+date-released: 2026-11-17
+license: MIT
+repository-code: "https://github.com/sahalpaladan/GeoDensityR"
+url: "https://CRAN.R-project.org/package=GeoDensityR"
+abstract: "Creates continuous density raster surfaces by joining vector spatial layers with tabular data, normalizing values by ellipsoidal polygon area. Reconciles boundary-constrained census or survey counts with uniform raster grids."
+keywords:
+  - R
+  - terra
+  - rasterization
+  - census data
+  - population density
+authors:
+  - family-names: Paladan
+    given-names: Sahal
+    affiliation: "ICAR-National Institute of Veterinary Epidemiology and Disease Informatics (ICAR-NIVEDI), Bengaluru, India"
+    # orcid: "https://orcid.org/0009-0005-0120-128X"
+  - family-names: Chanda
+    given-names: Mohammed Mudassar
+    affiliation: "ICAR-National Institute of Veterinary Epidemiology and Disease Informatics (ICAR-NIVEDI), Bengaluru, India"
+    # orcid: "https://orcid.org/0000-0002-5727-8658"
